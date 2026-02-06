@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Anchor - Student Rights</title>
+    <style>
+        /* PHASE 1 & 3: CORE STYLING */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --highlight: #0056b3; 
+            --alert-bg: #000000;
+            --alert-text: #ffffff;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+        }
+
+        /* UTILITIES */
+        .hidden { display: none !important; }
+        
+        /* FIXED: Increased Z-Index to 2000 so you can always type in these screens */
+        .full-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 2000; 
+            background: var(--bg-color);
+        }
+
+        /* PHASE 5: BREATHING TOOL */
+        #breathing-header {
+            text-align: center;
+            padding: 20px 0;
+            background: #f0f8ff;
+        }
+        .breath-circle {
+            width: 60px;
+            height: 60px;
+            background-color: var(--highlight);
+            border-radius: 50%;
+            margin: 0 auto;
+            opacity: 0.6;
+            animation: breathe 8s infinite ease-in-out;
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.5); opacity: 0.3; }
+        }
+        .breath-text {
+            font-size: 0.9rem;
+            color: var(--highlight);
+            margin-top: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* PHASE 2: HOME SCREEN & SEARCH */
+        .container {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        input#search-bar {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 3px solid var(--text-color);
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        h2 { font-size: 1.5rem; margin-bottom: 15px; }
+
+        /* BUTTONS */
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .btn-emergency {
+            background: white;
+            border: 3px solid var(--text-color);
+            padding: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: left;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+        }
+        .btn-emergency:active { transform: translateY(2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+        .icon { margin-right: 15px; font-size: 1.5rem; }
+
+        /* PHASE 3: SCRIPT MODE */
+        #script-view {
+            background-color: var(--alert-bg);
+            color: var(--alert-text);
+        }
+        #script-view h1 {
+            color: #ffdd00; 
+            font-size: 3rem;
+            margin-top: 0;
+            text-transform: uppercase;
+        }
+        .script-text {
+            font-size: 1.8rem;
+            line-height: 1.4;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-left: 5px solid #ffdd00;
+            padding-left: 20px;
+        }
+        .tips-section {
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 50px; /* Space for scrolling */
+        }
+        .tips-section h3 { margin-top: 0; color: #4dabf7; }
+        .tips-section li { font-size: 1.2rem; margin-bottom: 10px; }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            font-size: 1.5rem;
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 2001; /* Above everything */
+        }
+
+        /* PHASE 6: QUICK LOCK */
+        #quick-lock-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #eee;
+            border: 2px solid #ccc;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 3000; /* Highest z-index */
+        }
+
+        /* FAKE STUDY MODE */
+        #fake-screen {
+            background: white;
+            color: #333;
+            z-index: 2900;
+        }
+        #fake-screen h1 { font-family: "Times New Roman", serif; font-size: 1.5rem; text-align: center; }
+        #fake-screen p { font-family: "Times New Roman", serif; line-height: 1.6; }
+
+        /* PHASE 7: INCIDENT LOG */
+        .log-btn-wrapper { margin-top: 30px; }
+        .btn-log {
+            width: 100%;
+            padding: 20px;
+            background: #ddd;
+            border: none;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        textarea { 
+            width: 100%; 
+            height: 150px; 
+            padding: 10px; 
+            font-size: 1.1rem; 
+            margin: 10px 0 20px 0; 
+            border: 2px solid black; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="breathing-header">
+        <div class="breath-circle"></div>
+        <div class="breath-text">Inhale ... Exhale</div>
+    </div>
+
+    <div id="home-view" class="container">
+        <input type="text" id="search-bar" placeholder="What is happening? (Try 'log')" onkeyup="handleSearch()">
+
+        <h2>Emergency Buttons</h2>
+        <div class="btn-grid">
+            <button class="btn-emergency" onclick="openScript('police')">
+                <span class="icon">🚨</span> Questioned by Police
+            </button>
+            <button class="btn-emergency" onclick="openScript('search')">
+                <span class="icon">🎒</span> Bag/Locker Search
+            </button>
+            <button class="btn-emergency" onclick="openScript('office')">
+                <span class="icon">🏫</span> Sent to Office
+            </button>
+            <button class="btn-emergency" onclick="openScript('phone')">
+                <span class="icon">📱</span> Phone Confiscated
+            </button>
+        </div>
+
+        <div class="log-btn-wrapper">
+            <button class="btn-log" onclick="openLog()">📝 Log Incident</button>
+        </div>
+    </div>
+
+    <div id="quick-lock-btn" onclick="toggleLock()">🔒</div>
+
+    <div id="script-view" class="full-screen hidden">
+        <button class="close-btn" onclick="goHome()">X</button>
+        <h1>SAY THIS</h1>
+        <div id="script-content" class="script-text">
+            </div>
+        
+        <div class="tips-section">
+            <h3>DE-ESCALATION TIPS</h3>
+            <ul id="tips-content">
+                </ul>
+        </div>
+    </div>
+
+    <div id="log-view" class="full-screen hidden">
+        <button class="close-btn" style="color:black; border-color:black;" onclick="goHome()">X</button>
+        <h2 style="margin-top: 60px;">Incident Log</h2>
+        <p>This is saved only on your phone.</p>
+        <form onsubmit="saveLog(event)">
+            <label><strong>Who is involved?</strong></label>
+            <input type="text" id="log-who" style="width:100%; padding:10px; margin:5px 0 15px;" placeholder="Name or Badge #">
+            
+            <label><strong>What happened?</strong></label>
+            <textarea id="log-what" placeholder="Type here..."></textarea>
+            
+            <button type="submit" class="btn-emergency" style="background:#0056b3; color:white; justify-content:center;">SAVE LOG</button>
+        </form>
+        <div id="saved-msg" style="margin-top:20px; color:green; display:none; font-weight:bold; text-align:center;">Saved!</div>
+    </div>
+
+    <div id="fake-screen" class="full-screen hidden" onclick="toggleLock()">
+        <h1>Algebra II: Quadratic Formulas</h1>
+        <hr>
+        <p><strong>The Standard Form:</strong><br>ax² + bx + c = 0</p>
+        <p><strong>The Quadratic Formula:</strong><br>x = (-b ± √(b² - 4ac)) / 2a</p>
+        <p><strong>Vertex Form:</strong><br>y = a(x-h)² + k</p>
+        <br>
+        <p><em>Study Tip: Remember to check the discriminant (b² - 4ac) to determine the number of real roots.</em></p>
+        <p style="color:#ccc; margin-top:50px; text-align:center; font-size:0.8rem;">(Tap anywhere to unlock)</p>
+    </div>
+
+    <script>
+        // PHASE 8: NY LEGAL CONTENT (JSON DATA)
+        const scriptsData = {
+            police: {
+                text: "I want to be helpful, but I am choosing to remain silent. I will not answer questions without a parent or lawyer present.",
+                tips: ["Keep hands visible at all times.", "Do not run.", "Do not physically resist.", "Ask: 'Am I free to go?'"]
+            },
+            search: {
+                text: "I do not consent to a search of my person, my bag, or my locker. I am not physically resisting, but I do not consent.",
+                tips: ["Do not try to stop them physically.", "Say it clearly so witnesses hear.", "Remember their badge number."]
+            },
+            office: {
+                text: "Am I being disciplined? If so, I would like to call my parent/guardian before we speak further.",
+                tips: ["Stay calm.", "Do not sign anything without a parent.", "Ask to go to the guidance counselor."]
+            },
+            phone: {
+                text: "I understand you are taking my phone. Please turn it off in front of me. I do not consent to you unlocking or looking through it.",
+                tips: ["Do not give them your passcode.", "They generally cannot search the contents without a warrant."]
+            }
+        };
+
+        // NAVIGATION LOGIC
+        function goHome() {
+            document.querySelectorAll('.full-screen').forEach(el => el.classList.add('hidden'));
+            document.getElementById('home-view').classList.remove('hidden');
+        }
+
+        function openScript(type) {
+            const data = scriptsData[type];
+            if(!data) return;
+
+            document.getElementById('script-content').innerText = `"${data.text}"`;
+            
+            const list = document.getElementById('tips-content');
+            list.innerHTML = "";
+            data.tips.forEach(tip => {
+                const li = document.createElement('li');
+                li.innerText = tip;
+                list.appendChild(li);
+            });
+
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('script-view').classList.remove('hidden');
+        }
+
+        // --- UPDATED SEARCH LOGIC START ---
+        function handleSearch() {
+            const val = document.getElementById('search-bar').value.toLowerCase();
+            
+            // 1. Check for Emergency Keywords
+            if(val.includes('cop') || val.includes('police')) {
+                openScript('police');
+                resetSearch();
+            }
+            if(val.includes('bag') || val.includes('locker') || val.includes('search')) {
+                openScript('search');
+                resetSearch();
+            }
+            if(val.includes('dean') || val.includes('office')) {
+                openScript('office');
+                resetSearch();
+            }
+            if(val.includes('phone')) {
+                openScript('phone');
+                resetSearch();
+            }
+
+            // 2. Check for Log/Incident Keywords (THE FIX)
+            if(val.includes('log') || val.includes('incident') || val.includes('record')) {
+                openLog();
+                resetSearch();
+            }
+        }
+
+        // Helper to clear the bar
+        function resetSearch() {
+            document.getElementById('search-bar').value = "";
+            document.getElementById('search-bar').blur();
+        }
+        // --- UPDATED SEARCH LOGIC END ---
+
+        // PHASE 6: QUICK LOCK
+        function toggleLock() {
+            const screen = document.getElementById('fake-screen');
+            if (screen.classList.contains('hidden')) {
+                screen.classList.remove('hidden');
+            } else {
+                screen.classList.add('hidden');
+            }
+        }
+
+        // PHASE 7: LOGGING (LOCAL STORAGE)
+        function openLog() {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('log-view').classList.remove('hidden');
+        }
+
+        function saveLog(e) {
+            e.preventDefault();
+            const who = document.getElementById('log-who').value;
+            const what = document.getElementById('log-what').value;
+            const date = new Date().toLocaleString();
+
+            const entry = { date, who, what };
+            
+            // Get existing logs or start new
+            let logs = JSON.parse(localStorage.getItem('anchorLogs') || "[]");
+            logs.push(entry);
+            localStorage.setItem('anchorLogs', JSON.stringify(logs));
+
+            // Visual Feedback
+            document.getElementById('saved-msg').style.display = 'block';
+            document.getElementById('log-who').value = '';
+            document.getElementById('log-what').value = '';
+            
+            setTimeout(() => {
+                document.getElementById('saved-msg').style.display = 'none';
+                goHome();
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
